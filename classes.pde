@@ -22,6 +22,188 @@ class NumDir{
 
 
 
+
+class LineMaker {
+  PVector[] points_array;
+ LineMaker(Pip pip){
+   points_array = new PVector[pip.raw_hash.length()];
+   for(int i=0; i<pip.raw_hash.length(); i++){ 
+     points_array[i] = new PVector(pip.X(i), pip.Y(i+1));   
+   }
+   
+ }
+ 
+ void show_points(int size){
+   color fill1 = color(255, 255, 255, 50);
+   fill(fill1);
+   noStroke();
+   for(int i=0; i<points_array.length; i++){
+     ellipse(points_array[i].x, points_array[i].y, size, size);
+   }
+ }
+ 
+ void compute_distance(int max_distance){
+   
+   for(int i = 0; i<points_array.length; i++){
+    
+     for(int j = 0; j<points_array.length; j++){
+       if(dist(points_array[i].x, points_array[i].y, points_array[j].x, points_array[j].y) < max_distance){
+         
+         if(dist(points_array[i].x, points_array[i].y, points_array[j].x, points_array[j].y)!=0){
+           if((points_array[i].x != points_array[j].x) || (points_array[i].y != points_array[j].y)){
+          strokeWeight(0);
+          stroke(0,0,0,255);
+          line(points_array[i].x, points_array[i].y, points_array[j].x, points_array[j].y);
+           }
+         }
+       }
+     }
+   }
+ }
+ 
+  void show_scribble(){
+    noFill();
+    strokeWeight(1);
+    stroke(255,255,255,75);
+   for(int i=0; i<points_array.length; i++){
+     if(i<points_array.length-1){
+       line(points_array[i].x, points_array[i].y, points_array[i+1].x, points_array[i+1].y);
+     } else {
+       line(points_array[i].x, points_array[i].y, points_array[0].x, points_array[0].y);
+     }
+     
+   }
+  }
+   
+   void show_lines(int divider){
+    noFill();
+    strokeWeight(1);
+    stroke(255,255,255,75);
+   for(int i=0; i<points_array.length; i++){
+     if(i%divider == 0){
+     if(i<points_array.length-1){
+       line(points_array[i].x, points_array[i].y, points_array[i+1].x, points_array[i+1].y);
+     } else {
+       line(points_array[i].x, points_array[i].y, points_array[0].x, points_array[0].y);
+     }
+     }
+     
+   }
+ }
+ 
+ void show_complex_lines(int divider){
+    noFill();
+    strokeWeight(1);
+    stroke(0,0,0,150);
+   for(int i=0; i<points_array.length; i++){
+     if(i%divider == 0){
+     if(i<points_array.length-3){
+       line(points_array[i].x, points_array[i].y, points_array[i+1].x, points_array[i+1].y);
+       line(points_array[i+1].x, points_array[i+1].y, points_array[i+2].x, points_array[i+2].y);
+       line(points_array[i+2].x, points_array[i+2].y, points_array[i+3].x, points_array[i+3].y);
+     } else {
+       line(points_array[i].x, points_array[i].y, points_array[0].x, points_array[0].y);
+       line(points_array[0].x, points_array[0].y, points_array[1].x, points_array[1].y);
+       line(points_array[1].x, points_array[1].y, points_array[2].x, points_array[2].y);
+     }
+     }
+     
+   }
+ }
+ 
+ 
+  void show_stars(int number){
+    int mx = number;
+    float pA = .5*mx;
+    float pB = .15*mx;
+    float pC = .4*mx;
+    float pD = .47*mx;
+    float pE = .29*mx;
+    if(number<10){
+   color fill1 = color(255, 255, 255, 50);
+   fill(fill1);
+   noStroke();
+   for(int i=0; i<points_array.length; i++){
+     ellipse(points_array[i].x, points_array[i].y+pA, 3, 3);
+     ellipse((points_array[i].x+pD), (points_array[i].y+pB), 3, 3);
+     ellipse((points_array[i].x+pE), (points_array[i].y-pC), 3, 3);
+     ellipse((points_array[i].x-pE), (points_array[i].y-pC), 3, 3);
+     ellipse((points_array[i].x-pD), (points_array[i].y+pB), 3, 3);
+   }
+    } else if(number<20){
+      stroke(0);
+      strokeWeight(0);
+      for(int i=0; i<points_array.length; i++){
+      line(points_array[i].x, points_array[i].y+pA, points_array[i].x, points_array[i].y);
+      line((points_array[i].x+pD), (points_array[i].y+pB), points_array[i].x, points_array[i].y);
+      line((points_array[i].x+pE), (points_array[i].y-pC), points_array[i].x, points_array[i].y);
+      line((points_array[i].x-pE), (points_array[i].y-pC), points_array[i].x, points_array[i].y);
+      line((points_array[i].x-pD), (points_array[i].y+pB), points_array[i].x, points_array[i].y);
+      }
+    } else {
+      stroke(255);
+      strokeWeight(0);
+      for(int i=0; i<points_array.length; i++){
+        line((points_array[i].x-pE), (points_array[i].y-pC), points_array[i].x, points_array[i].y+pA);
+        line(points_array[i].x, points_array[i].y+pA, (points_array[i].x+pE), (points_array[i].y-pC));
+        line((points_array[i].x+pE), (points_array[i].y-pC), (points_array[i].x-pD), (points_array[i].y+pB));
+        line((points_array[i].x-pD), (points_array[i].y+pB), (points_array[i].x+pD), (points_array[i].y+pB));
+        line((points_array[i].x+pD), (points_array[i].y+pB), (points_array[i].x-pE), (points_array[i].y-pC));
+      }
+    }
+ }
+ 
+ 
+ void draw_bezier(){
+    noFill();
+    strokeWeight(width*0.0015);
+    stroke(255,255,255,255);
+    bezier(points_array[12].x, points_array[12].y, points_array[1].x, points_array[1].y, points_array[2].x, points_array[2].y, points_array[3].x, points_array[3].y);
+    bezier(points_array[3].x, points_array[3].y, points_array[16].x, points_array[16].y, points_array[17].x, points_array[17].y, points_array[18].x, points_array[18].y);
+    bezier(points_array[18].x, points_array[18].y, points_array[26].x, points_array[26].y, points_array[27].x, points_array[27].y, points_array[12].x, points_array[12].y);
+ }
+     
+
+ void show_dots(){
+    //fill(125,0,240,100);
+    //strokeWeight(width*0.0015);
+    //stroke(255,255,255,255);
+    noStroke();
+    pushMatrix();
+    for(int i=0;i<35;i++){
+    fill(199*i%255,35*i%255,240*i%255,100);
+    ellipse(points_array[i].x, points_array[i].y, 20, 20);
+    translate(width/2, height/2);
+    rotate(PI/4);
+    translate(-width/2, -height/2);
+    }
+    popMatrix();
+ }
+ 
+ 
+ void show_colored_lines(int divider){
+    //fill(125,0,240,100);
+    strokeWeight(width*0.0015);
+    //stroke(255,255,255,255);
+    //noStroke();
+    pushMatrix();
+    for(int i=0;i<divider;i++){
+    stroke(199*i%255,35*i%255,240*i%255,100);
+    line(points_array[i].x, points_array[i].y, 20, 20);
+    translate(width/2, height/2);
+    rotate(PI/4);
+    translate(-width/2, -height/2);
+    }
+    popMatrix();
+ }
+ 
+ 
+}
+
+
+
+
+
 class Pip {
   String raw_hash;
   String[] array_hash;
@@ -85,6 +267,57 @@ class Pip {
   
 }
 
+class Backdrop{
+  int c1;
+  int c2;
+  int c3;
+  int a;
+  
+   Backdrop(int _c1, int _c2, int _c3, int _a){
+     c1 = _c1;
+     c2 = _c2;
+     c3 = _c3;
+     a = _a;
+   }
+   
+   void colorBlock(){
+    fill(c1, c2, c3);
+    rectMode(CORNERS);
+    rect(0,0,width, height); 
+   }
+   
+   void gradientBlock(String _axis){
+     color colorA = color(c1,c2,c3);
+     color colorB = color(c1+1000%1000, c2+50%50, 255);
+     //color lerped = lerpColor(colorA, colorB, .9);
+     if (_axis=="Y_AXIS"){
+       for (float i = 0; i<height; i++){
+         float mapped_value = map(i, 0,height, 0,1);
+         color lerped = lerpColor(colorA, colorB, mapped_value);
+         strokeWeight(4);
+         stroke(lerped);
+         line(0,i,width,i);
+       }
+     } else if(_axis == "X_AXIS"){
+       for (float i = 0; i<width; i++){
+         float mapped_value = map(i, 0,width, 0,1);
+         color lerped = lerpColor(colorA, colorB, mapped_value);
+         strokeWeight(4);
+         stroke(lerped);
+         line(i, 0,i, height);
+       }
+     }
+
+    //color gradient1 = lerpColor(colorA, colorB, .5);
+    //fill(gradient1);
+    //rectMode(CORNERS);
+    //rect(0,0,width, height); 
+   }
+   
+   
+}
+
+
 
 
 class Trapezoid {
@@ -92,12 +325,14 @@ class Trapezoid {
   PVector p2;
   PVector p3;
   PVector p4;
+  int average;
   
   Trapezoid(int px1, int py1, int px2, int py2, int px3, int py3, int px4, int py4){
     p1 = new PVector(px1, py1);
     p2 = new PVector(px2, py2);
     p3 = new PVector(px3, py3);
     p4 = new PVector(px4, py4);
+    average = (px1+py1+px2+py2+px3+py3+px4+py4)/8;
   }
   
   void update(){
@@ -127,16 +362,41 @@ class Trapezoid {
     line(p4.x, p4.y, p2.x, p2.y);
   }
   
+  void spiral_vortex(int c1, int c2, int c3, int a){
+    color fill1 = color(c1, c2, c3, a);
+    //noStroke();
+    stroke(fill1);
+    strokeWeight(10);
+    pushMatrix();
+    //translate(-width/2, -height/2);
+    translate(width/2, height/2);
+    scale(.3);
+    for(int i=0;i<average;i++){
+    rotate(i);
+    p1.add(2, 2);
+    p2.add(2, 2);
+    p3.add(2, 2);
+    p4.add(2, 2);
+    fill(fill1);
+    line(p1.x, p1.y, 10000, 10000);
+    }
+      popMatrix();
+  }
+  
+  
   void show_shapes(int c1, int c2, int c3, int a){
+
+
     color fill1 = color(c1, c2, c3, a);
     color fill2 = color(c1, c2, c1, c2);
-    fill(fill1);
     noStroke();
+    fill(fill1);
     triangle(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
     fill(fill2);
-    noStroke();
     triangle(p4.x, p4.y, p2.x, p2.y, p3.x, p3.y);
   }
+  
+
 }
 
 
@@ -199,6 +459,7 @@ class Rectangle{
 class Grid{
   int vertical_divider;
   int horizontal_divider;
+  color c1;
   
   Grid(int p, int q){
     if(p<4){p=4;}
