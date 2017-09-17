@@ -1,31 +1,33 @@
 import processing.pdf.*;
-
-String[] charpool = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+String[] charpool = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+//String[] charpool = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
 String temp;
 NumDir nd;
 Pip pip;
 float timer_reset;
 boolean image_capture;
-
+String str;
 
 void setup(){
-  fullScreen();
-  //size(800,800);
+  //fullScreen();
+  size(650,650);
   temp = build_hash_string();
   nd = new NumDir(charpool);
   pip = new Pip(temp);
   background(pip.C(1), pip.C(5), pip.C(7), pip.A(9)); 
+  str = fetchFile("http://www.projectonthemoon.com/b58.txt");
   
 }
 
 
 void draw(){
-
+println(str);
   
-  if(millis()-timer_reset>=1000){
+  if(millis()-timer_reset>=3000){
+    str = fetchFile("http://www.projectonthemoon.com/b58.txt");
     //image_capture=true;
     temp = build_hash_string();
-    pip = new Pip(temp);
+    pip = new Pip(str);
     timer_reset=millis();
     
   }
@@ -144,6 +146,18 @@ Trapezoid trap2 = new Trapezoid(pip.X(8), pip.Y(9), pip.X(10), pip.Y(11), pip.X(
   }
  
 }
+
+
+String fetchFile(String h){
+  String hash[] = loadStrings(h);
+    if(hash!= null){
+       return hash[0];
+     } else {
+       hash[0]= "00000000000000000000000000000000000000000000";
+       return hash[0];
+     }
+  }
+
 
 void keyPressed() {
   // is ke pressed is spacebar
