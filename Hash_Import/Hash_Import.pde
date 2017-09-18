@@ -12,10 +12,11 @@ void setup(){
   //fullScreen();
   size(650,650);
   temp = build_hash_string();
-  nd = new NumDir(charpool);
-  pip = new Pip(temp);
-  background(pip.C(1), pip.C(5), pip.C(7), pip.A(9)); 
   str = fetchFile("http://www.projectonthemoon.com/b58.txt");
+  nd = new NumDir(charpool);
+  pip = new Pip(str);
+  background(pip.C(1), pip.C(5), pip.C(7), pip.A(9)); 
+  
   
 }
 
@@ -35,7 +36,7 @@ println(str);
   background(204);
 
   if(image_capture){
-    beginRecord(PDF, "screenshots/"+temp+".pdf"); 
+    beginRecord(PDF, "screenshots/"+str+".pdf"); 
   }
   
 //construct objects
@@ -149,14 +150,19 @@ Trapezoid trap2 = new Trapezoid(pip.X(8), pip.Y(9), pip.X(10), pip.Y(11), pip.X(
 
 
 String fetchFile(String h){
-  String hash[] = loadStrings(h);
-    if(hash!= null){
+  if (loadStrings(h)==null){
+    String hash = "WelcomeToTheMachine2017";
+    return hash;
+  } else {
+    String hash[] = loadStrings(h);
+    if(hash.length!=0){
        return hash[0];
      } else {
        hash[0]= "00000000000000000000000000000000000000000000";
        return hash[0];
      }
   }
+}
 
 
 void keyPressed() {
