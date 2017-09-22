@@ -1,19 +1,26 @@
+//required for saving individual images to PDF
 import processing.pdf.*;
-String[] charpool = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
-//String[] charpool = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+//This defines the character pool that will be used in the number dictionary
+String[] charpool = {"A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+//temp is used for testing purposes. Leave it alone/ignore it.
 String temp;
 NumDir nd;
 Pip pip;
+//timer_reset is used to calculate the time interval between calls to the website
 float timer_reset;
 boolean image_capture;
 String str;
 
 void setup(){
-  //fullScreen();
-  size(650,650);
+  //uncomment the fullscreen function below and comment out the size function to switch between full screen and windowed
+  fullScreen();
+  //size(650,650);
   temp = build_hash_string();
+  //str holds the hash string obtained from the website
   str = fetchFile("http://www.projectonthemoon.com/b58.txt");
+  //nd stands for number dictionary and it holds the associative array
   nd = new NumDir(charpool);
+  //pip holds the Pip object which is used to access the number dictionary value for each hash character
   pip = new Pip(str);
   background(pip.C(1), pip.C(5), pip.C(7), pip.A(9)); 
   
@@ -22,8 +29,9 @@ void setup(){
 
 
 void draw(){
-println(str);
+//println(str);
   
+  //this timer works on the interval below in milliseconds
   if(millis()-timer_reset>=3000){
     str = fetchFile("http://www.projectonthemoon.com/b58.txt");
     //image_capture=true;
@@ -32,9 +40,10 @@ println(str);
     timer_reset=millis();
     
   }
-  //background needs to run before the scree begins recording
+  //background needs to run before the screen begins recording
   background(204);
 
+  //begins the pdf recording if spacebar was pressed
   if(image_capture){
     beginRecord(PDF, "screenshots/"+str+".pdf"); 
   }
@@ -145,10 +154,13 @@ Trapezoid trap2 = new Trapezoid(pip.X(8), pip.Y(9), pip.X(10), pip.Y(11), pip.X(
     endRecord();
    image_capture = false; 
   }
- 
 }
 
 
+
+
+//fetches the hash file that is stored on a server as a txt file
+//should only be the hash string and nothing else
 String fetchFile(String h){
   if (loadStrings(h)==null){
     String hash = "WelcomeToTheMachine2017";
@@ -164,7 +176,7 @@ String fetchFile(String h){
   }
 }
 
-
+//checks for spacebar press to begin recording the image to pdf
 void keyPressed() {
   // is ke pressed is spacebar
   if(key == 32){
@@ -172,6 +184,8 @@ void keyPressed() {
   }
 }
 
+
+//used for testing to build a variety of hash strings on the fly
 String build_hash_string() {
   String thecode[] = {};
   String hash_string = "";

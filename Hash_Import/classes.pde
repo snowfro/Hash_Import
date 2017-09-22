@@ -1,7 +1,9 @@
+//This class builds the Number Dictionary, which is used to associate the Base58 values to a unique number value
 class NumDir{
   String[] charpool;
   StringDict nd;
   // input the character pool and builds the dictionary with numerical definitions
+  // the dictionary adjusts dynamically to the character pool length
   NumDir(String[] _charpool){
     charpool = _charpool;
     nd = new StringDict();
@@ -10,7 +12,7 @@ class NumDir{
     }
   }
   
-  //Input the hash character (as string) and get the numeric value (as int) in return as per dictionary definition
+  //Input the hash character (as string) and get the numeric value (as int) in return as per Number Dictionary definition
   int P(String _character){
    String character = _character;
    //character = nd.get(character);
@@ -22,7 +24,9 @@ class NumDir{
 
 
 
-
+//This class is used to generate a variety of stray and/or joined line types
+//The constructor takes the entire Pip object as the parameter and converts it 
+// into a series of x and y points as PVectors
 class LineMaker {
   PVector[] points_array;
  LineMaker(Pip pip){
@@ -33,6 +37,8 @@ class LineMaker {
    
  }
  
+ //shows all of the points 
+ //takes a size variable as input parameter
  void show_points(int size){
    color fill1 = color(255, 255, 255, 50);
    fill(fill1);
@@ -42,10 +48,12 @@ class LineMaker {
    }
  }
  
+ //computes the distance between every PVector point in the array
+ //if the points are within a given maximum distance, then it will
+ //draw a line conecting them
+ //looks like constellations
  void compute_distance(int max_distance){
-   
    for(int i = 0; i<points_array.length; i++){
-    
      for(int j = 0; j<points_array.length; j++){
        if(dist(points_array[i].x, points_array[i].y, points_array[j].x, points_array[j].y) < max_distance){
          
@@ -61,6 +69,8 @@ class LineMaker {
    }
  }
  
+ //draws a continuous polyline connecting all of the points in the array
+ //looks like scribble
   void show_scribble(){
     noFill();
     strokeWeight(1);
@@ -75,6 +85,8 @@ class LineMaker {
    }
   }
    
+   //shows a given number of lines strewn around the canvas
+   //divider is used to show more lines or to show less lines
    void show_lines(int divider){
     noFill();
     strokeWeight(1);
@@ -91,6 +103,8 @@ class LineMaker {
    }
  }
  
+ //shows lines that have 3 segments each...like in the shape of a "U"
+ //divider is used to show more lines or to show less lines
  void show_complex_lines(int divider){
     noFill();
     strokeWeight(1);
@@ -111,7 +125,7 @@ class LineMaker {
    }
  }
  
- 
+ //creates 5 pointed stars of variable sizes and line styles
   void show_stars(int number){
     int mx = number;
     float pA = .5*mx;
@@ -153,7 +167,7 @@ class LineMaker {
     }
  }
  
- 
+ //draws a flowing and curved line 
  void draw_bezier(){
     noFill();
     strokeWeight(width*0.0015);
@@ -163,7 +177,7 @@ class LineMaker {
     bezier(points_array[18].x, points_array[18].y, points_array[26].x, points_array[26].y, points_array[27].x, points_array[27].y, points_array[12].x, points_array[12].y);
  }
      
-
+// not sure what this one does....needs to be verified and updated
  void show_dots(){
     //fill(125,0,240,100);
     //strokeWeight(width*0.0015);
@@ -180,7 +194,7 @@ class LineMaker {
     popMatrix();
  }
  
- 
+ //draws a variety of colored lines strewn around the surface of the canvas
  void show_colored_lines(int divider){
     //fill(125,0,240,100);
     strokeWeight(width*0.0015);
@@ -203,7 +217,10 @@ class LineMaker {
 
 
 
-
+//This is the most important class
+//if creates the Pip object, which contains the methods needed to retrieve the number dictionary values
+//from each hash character. Contructor requires the raw hash string.
+//hash string length can be variable.
 class Pip {
   String raw_hash;
   String[] array_hash;
@@ -213,12 +230,14 @@ class Pip {
   //also saves each character as an array element
   Pip(String _raw){
     raw_hash = _raw;
+    //the hash is reversed to avoid leading nonce characters which may be present in some cryptos
     array_hash = reverse(raw_hash.split(""));
   }
   
   // input a number, grabs the corresponding hash_character, then inputs the hash character
   // into the number dictionary, and then outputs the corresponding number value of that hash character.
-  // Essencially, converts the hash character into a number. 
+  // Essencially, converts the hash character into a number.
+  //_num is the position of the hash character counting from left to right
   int P(int _num){
     int number_value;
     if((_num>=raw_hash.length())||(_num<0)) {
@@ -230,6 +249,7 @@ class Pip {
     }
   }
   
+  // the C method maps the P method returned value into a range of 255 to be used for rgb color values
   int C(int _num){
     NumDir nd = new NumDir(charpool);
     int number_value = this.P(_num);
@@ -237,6 +257,7 @@ class Pip {
     return mapped_value;
   }
   
+  //the A method maps the P method's return value into a range from 50 to 100 to be used for alpha transparency values
   int A(int _num){
     NumDir nd = new NumDir(charpool);
     int number_value = this.P(_num);
@@ -244,6 +265,7 @@ class Pip {
     return mapped_value;
   }
   
+  //the X method maps the P method's return value into a range from 0 to screen width to be used for x-coordinate positioning
   int X(int _num){
     NumDir nd = new NumDir(charpool);
     int number_value = this.P(_num);
@@ -251,6 +273,7 @@ class Pip {
     return mapped_value;
   }
   
+  //the Y method maps the P method's return value into a range from 0 to screen height to be used for y-coordinate positioning
   int Y(int _num){
     NumDir nd = new NumDir(charpool);
     int number_value = this.P(_num);
@@ -258,6 +281,7 @@ class Pip {
     return mapped_value;
   }
   
+  // the R method maps the P method's retun value into a range from 0 to 32 to be used for small circle radius   
     int R(int _num){
     NumDir nd = new NumDir(charpool);
     int number_value = this.P(_num);
@@ -267,6 +291,9 @@ class Pip {
   
 }
 
+
+// This class generates a variety of background effects. 
+// The constructor requires three color values and an alpha value.
 class Backdrop{
   int c1;
   int c2;
@@ -280,12 +307,14 @@ class Backdrop{
      a = _a;
    }
    
+   //solid fill
    void colorBlock(){
     fill(c1, c2, c3);
     rectMode(CORNERS);
     rect(0,0,width, height); 
    }
    
+   //gradient background effect, runs either horizontally or vertically, requires axis input parameter (X_AXIS or Y_AXIS)
    void gradientBlock(String _axis){
      color colorA = color(c1,c2,c3);
      color colorB = color(c1+1000%1000, c2+50%50, 255);
@@ -307,19 +336,12 @@ class Backdrop{
          line(i, 0,i, height);
        }
      }
-
-    //color gradient1 = lerpColor(colorA, colorB, .5);
-    //fill(gradient1);
-    //rectMode(CORNERS);
-    //rect(0,0,width, height); 
    }
-   
-   
 }
 
 
 
-
+// This class draws out a trapezoidal shape with 4 points (as PVectors) required by the constructor
 class Trapezoid {
   PVector p1;
   PVector p2;
@@ -335,10 +357,8 @@ class Trapezoid {
     average = (px1+py1+px2+py2+px3+py3+px4+py4)/8;
   }
   
-  void update(){
-    
-  }
-  
+  // shows the points of the trapezoid as circles with radius 10
+  //requires 3 colors and an alpha value
   void show_dots(int c1, int c2, int c3, int a){
     color fill1 = color(c1, c2, c3, a);
     fill(fill1);
@@ -349,6 +369,8 @@ class Trapezoid {
     ellipse(p4.x, p4.y, 10, 10);
   }
   
+  //shows the lines connecting all of the points of the trapezoid (6 lines total)
+  //requires 3 colors and an alpha value
   void show_lines(int c1, int c2, int c3, int a){
     color fill1 = color(c1, c2, c3, a);
     noFill();
@@ -362,6 +384,8 @@ class Trapezoid {
     line(p4.x, p4.y, p2.x, p2.y);
   }
   
+  //creates a polar array of the filled trapezoid shape around the center of the screen
+  //requires 3 colors and an alpha value
   void spiral_vortex(int c1, int c2, int c3, int a){
     color fill1 = color(c1, c2, c3, a);
     //noStroke();
@@ -383,10 +407,9 @@ class Trapezoid {
       popMatrix();
   }
   
-  
+  //displays two trapezoidal shapes
+  //requires 3 colors and an alpha value
   void show_shapes(int c1, int c2, int c3, int a){
-
-
     color fill1 = color(c1, c2, c3, a);
     color fill2 = color(c1, c2, c1, c2);
     noStroke();
@@ -395,11 +418,9 @@ class Trapezoid {
     fill(fill2);
     triangle(p4.x, p4.y, p2.x, p2.y, p3.x, p3.y);
   }
-  
-
 }
 
-
+//This class draws a rectangle. For the constructor, iput a width, a height, and a corner radius value for rounded corners
 class Rectangle{
   int rect_height;
   int rect_width;
@@ -411,6 +432,8 @@ class Rectangle{
     corner_round = _corner_round;
   }
   
+  //Shows a single rectangular shape
+  //requires 3 colors and an alpha value
   void show1(int c1, int c2, int c3, int a){
     color fill1 = color(c1, c2, c3, a);
     fill(fill1);
@@ -419,6 +442,8 @@ class Rectangle{
     rect(width/2, height/2, rect_width, rect_height, corner_round);
   }
   
+  //Shows 3 equally spaced rectangular shapes
+  //requires 3 colors and an alpha value
   void show3(int c1, int c2, int c3, int a){
     color fill1 = color(c1, c2, c3, a);
     fill(fill1);
@@ -435,6 +460,8 @@ class Rectangle{
     }
   }
   
+  //Shows 5 equally spaced rectangular shapes
+  //requires 3 colors and an alpha value
   void show5(int c1, int c2, int c3, int a){
     color fill1 = color(c1, c2, c3, a);
     fill(fill1);
@@ -456,6 +483,9 @@ class Rectangle{
   }
 }
 
+
+//This class creates a very fine grid pattern accross the entire window
+//constructor requires two integers which will be used to determine the grid spacing
 class Grid{
   int vertical_divider;
   int horizontal_divider;
@@ -468,6 +498,8 @@ class Grid{
     horizontal_divider = q;
   }
   
+  //draws the grid with oblique angles
+  //mixer is used to give the angles a bit more rotation
   void show_diagonal(int mixer){
     noFill();
     strokeWeight(1);
@@ -478,6 +510,7 @@ class Grid{
        line(i-mixer, 0, i+mixer, height); 
   }}}
   
+  //draws vertical lines
   void show_vertical(){
     noFill();
     strokeWeight(1);
@@ -487,6 +520,7 @@ class Grid{
        line(i, 0, i, height); 
   }}}
   
+  //draws horizontal lines
   void show_horizontal(){
     noFill();
     strokeWeight(1);
