@@ -1,7 +1,10 @@
 //required for saving individual images to PDF
-import processing.pdf.*;
+import processing.pdf.*; 
+//import processing.net.*;
+//import http.requests.*;
+
 //This defines the character pool that will be used in the number dictionary
-String[] charpool = {"A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+String[] charpool = {"A", "B", "C", "D", "E", "F", "a", "b", "c", "d", "e", "f", "x", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"};
 //temp is used for testing purposes. Leave it alone/ignore it.
 String temp;
 NumDir nd;
@@ -10,14 +13,18 @@ Pip pip;
 float timer_reset;
 boolean image_capture;
 String str;
+//Client myClient;
 
 void setup(){
   //uncomment the fullscreen function below and comment out the size function to switch between full screen and windowed
   fullScreen();
-  //size(650,650);
+  //size(800,600);
   temp = build_hash_string();
   //str holds the hash string obtained from the website
-  str = fetchFile("http://www.projectonthemoon.com/b58.txt");
+  //myClient = new Client(this,"https://untitled-y3h2rrgzgfcj.runkit.sh",8080);
+  //str = myClient.readString();
+  //print(str);
+  str = fetchFile("https://untitled-bmds9dayluum.runkit.sh/");
   //nd stands for number dictionary and it holds the associative array
   nd = new NumDir(charpool);
   //pip holds the Pip object which is used to access the number dictionary value for each hash character
@@ -32,12 +39,16 @@ void draw(){
 //println(str);
   
   //this timer works on the interval below in milliseconds
-  if(millis()-timer_reset>=3000){
-    str = fetchFile("http://www.projectonthemoon.com/b58.txt");
+  if(millis()-timer_reset>=25000){
+    
+    //myClient = new Client(this,"https://untitled-y3h2rrgzgfcj.runkit.sh",80);
+    //str = myClient.readString();
     //image_capture=true;
+    str = fetchFile("https://untitled-bmds9dayluum.runkit.sh/");
     temp = build_hash_string();
     pip = new Pip(str);
     timer_reset=millis();
+
     
   }
   //background needs to run before the screen begins recording
@@ -149,6 +160,9 @@ Trapezoid trap2 = new Trapezoid(pip.X(8), pip.Y(9), pip.X(10), pip.Y(11), pip.X(
 //draw trapezoid   
   trap2.show_shapes(pip.C(8), pip.C(9), pip.C(10), pip.A(11));
   
+  fill(255,255,255);
+  text(str,100,100);
+  
   
   if(image_capture){
     endRecord();
@@ -188,7 +202,7 @@ void keyPressed() {
 //used for testing to build a variety of hash strings on the fly
 String build_hash_string() {
   String thecode[] = {};
-  String hash_string = "";
+  String hash_string = "";  
   for (int i=0; i<64; i++){
     int arraypicker = (int)random(charpool.length);
     thecode = append(thecode, charpool[arraypicker]);
