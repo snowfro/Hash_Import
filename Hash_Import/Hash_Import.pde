@@ -13,7 +13,7 @@ Pip pip;
 float timer_reset;
 boolean image_capture;
 String str;
-//Client myClient;
+
 
 void setup(){
   //uncomment the fullscreen function below and comment out the size function to switch between full screen and windowed
@@ -21,10 +21,7 @@ void setup(){
   //size(800,600);
   temp = build_hash_string();
   //str holds the hash string obtained from the website
-  //myClient = new Client(this,"https://untitled-y3h2rrgzgfcj.runkit.sh",8080);
-  //str = myClient.readString();
-  //print(str);
-  str = fetchFile("https://untitled-bmds9dayluum.runkit.sh/");
+  str = fetchFile("http://redeemr.whatsthescore.webfactional.com");
   //nd stands for number dictionary and it holds the associative array
   nd = new NumDir(charpool);
   //pip holds the Pip object which is used to access the number dictionary value for each hash character
@@ -41,10 +38,9 @@ void draw(){
   //this timer works on the interval below in milliseconds
   if(millis()-timer_reset>=25000){
     
-    //myClient = new Client(this,"https://untitled-y3h2rrgzgfcj.runkit.sh",80);
-    //str = myClient.readString();
+    
     //image_capture=true;
-    str = fetchFile("https://untitled-bmds9dayluum.runkit.sh/");
+    str = fetchFile("http://redeemr.whatsthescore.webfactional.com");
     temp = build_hash_string();
     pip = new Pip(str);
     timer_reset=millis();
